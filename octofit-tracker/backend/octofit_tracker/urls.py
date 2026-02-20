@@ -17,14 +17,20 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from django.http import JsonResponse
+import os
 
 def api_root(request):
+    codespace_name = os.environ.get('CODESPACE_NAME', 'localhost')
+    if codespace_name == 'localhost':
+        api_url = 'http://localhost:8000/api/'
+    else:
+        api_url = f'https://{codespace_name}-8000.app.github.dev/api/'
     return JsonResponse({
-        'users': '/api/users/',
-        'teams': '/api/teams/',
-        'activities': '/api/activities/',
-        'leaderboard': '/api/leaderboard/',
-        'workouts': '/api/workouts/',
+        'users': api_url + 'users/',
+        'teams': api_url + 'teams/',
+        'activities': api_url + 'activities/',
+        'leaderboard': api_url + 'leaderboard/',
+        'workouts': api_url + 'workouts/',
     })
 
 urlpatterns = [

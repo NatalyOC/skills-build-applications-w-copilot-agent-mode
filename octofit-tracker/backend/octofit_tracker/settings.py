@@ -26,8 +26,14 @@ SECRET_KEY = 'django-insecure-4+7kwvvz0a0x^i#0sl2o!ar-fb7=!gjqnxxk6j8z4u@qooj(g%
 DEBUG = True
 
 
-# Allow all hosts for development
-ALLOWED_HOSTS = ['*']
+
+# Allow codespace and localhost for development
+import os
+codespace_name = os.environ.get('CODESPACE_NAME')
+if codespace_name:
+    ALLOWED_HOSTS = [f'{codespace_name}-8000.app.github.dev', 'localhost', '127.0.0.1']
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -80,15 +86,11 @@ WSGI_APPLICATION = 'octofit_tracker.wsgi.application'
 
 
 # Database
-# Use Djongo to connect to MongoDB
+# Use SQLite for development (MongoDB not available in Alpine)
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'octofit_db',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': 'mongodb://localhost:27017',
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
